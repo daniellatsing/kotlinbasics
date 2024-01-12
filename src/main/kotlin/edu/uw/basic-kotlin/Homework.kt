@@ -4,11 +4,7 @@ package edu.uw.basickotlin
 fun whenFn(arg: Any): String {
     when (arg) {
         is String -> {
-            if (arg == "Hello") {
-                return "world"
-            } else {
-                return "Say what?"
-            }
+            return if (arg == "Hello") return "world" else return "Say what?"
         }
         is Int -> {
             when (arg) {
