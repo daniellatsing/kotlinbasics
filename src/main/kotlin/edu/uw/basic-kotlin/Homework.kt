@@ -23,13 +23,13 @@ fun whenFn(arg: Any): String {
 }
 
 // write an "add" function that takes two Ints, returns an Int, and adds the values
-fun add(lhs: Int, rhs: Int): Int = 
+fun add(a: Int, b: Int): Int = a + b
 
 // write a "sub" function that takes two Ints, returns an Int, and subtracts the values
-fun sub(lhs: Int, rhs: Int): Int = 0
+fun sub(a: Int, b: Int): Int = a - b
 
 // write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), returns an Int, and applies the passed-in-function to the arguments
-fun mathOp(lhs: Int, rhs: Int, op: (Int, Int) -> Int) = 0
+fun mathOp(a: Int, b: Int, op: (Int, Int) -> Int) = op(a, b)
 
 // write a class "Person" with first name, last name and age
 
