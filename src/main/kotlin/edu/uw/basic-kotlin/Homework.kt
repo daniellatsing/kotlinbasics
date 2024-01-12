@@ -4,7 +4,7 @@ package edu.uw.basickotlin
 fun whenFn(arg: Any): String {
     when (arg) {
         is String -> {
-            return if (arg == "Hello") return "world" else return "Say what?"
+            return if (arg == "Hello") "world" else "Say what?"
         }
         is Int -> {
             when (arg) {
@@ -28,5 +28,10 @@ fun sub(a: Int, b: Int): Int = a - b
 fun mathOp(a: Int, b: Int, op: (Int, Int) -> Int) = op(a, b)
 
 // write a class "Person" with first name, last name and age
+class Person(var firstName: String, var lastName: String, var age: Int) {
+    val debugString: String {
+        get() = "[Person firstName:$firstName lastName:$lastName age:$age]"
+    }
+}
 
 // write a class "Money"
