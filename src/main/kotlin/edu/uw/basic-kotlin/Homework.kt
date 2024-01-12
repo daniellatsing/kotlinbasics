@@ -29,9 +29,49 @@ fun mathOp(a: Int, b: Int, op: (Int, Int) -> Int) = op(a, b)
 
 // write a class "Person" with first name, last name and age
 class Person(var firstName: String, var lastName: String, var age: Int) {
-    val debugString: String {
+    val debugString: String 
         get() = "[Person firstName:$firstName lastName:$lastName age:$age]"
-    }
 }
 
 // write a class "Money"
+class Money(var amount: Int, var currency: String) {
+    init {
+        if (amount < 0) 
+            throw IllegalArgumentException("Amount cannot be less than zero")
+        
+        if (currency !in listOf("USD", "GBP", "EUR", "CAN"))
+            throw IllegalArgumentException("Unreqcognized currency")
+    }
+    
+    fun convert(otherCurrency: String): Money {
+        if (otherCurrency !in listOf("USD", "EUR", "CAN", "GBP"))
+            throw IllegalArgumentException("Unreqcognized currency")
+        
+        return when {
+            this.currency == otherCurrency -> Money(this.amount, otherCurrency)
+            this.currency == "USD" -> when (otherCurrency) {
+                "GBP" -> Money((amount * 0.5).toInt(), "GBP")
+                "EUR" -> Money((amount * 1.5).toInt(), "EUR")
+                "CAN" -> Money((amount * 1.25).toInt(), "CAN")
+                else -> convert("USD").convert(otherCurrency)
+            }
+            this.currency == "GBP" -> when (otherCurrency) {
+                "USD" -> Money((amount * 2).toInt(), "USD")
+                else -> convert("USD").convert(otherCurrency)
+            }
+            this.currency == "EUR" -> when (otherCurrency) {
+                "USD" -> Money((amount * 0.67).toInt(), "USD")
+                else -> convert("USD").convert(otherCurrency)
+            }
+            this.currency == "CAN" -> when (otherCurrency) {
+                "USD" -> Money((amount * 0.8).toInt(), "USD")
+                else -> convert("USD").convert(otherCurrency)
+            }
+        }
+        else -> convert("USD").convert(otherCurrency)
+    }
+
+    operator fun plus(other: Money): Money {
+        return Money(this.amount + (other.convert(this.currency)).amount, this.currency)
+    }
+}
