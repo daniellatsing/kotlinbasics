@@ -10,7 +10,7 @@ fun whenFn(arg: Any): String {
             when (arg) {
                 0 -> return "zero"
                 1 -> return "one"
-                in 2..10 -> return "low numbers"
+                in 2..10 -> return "low number"
                 else -> return "a number"
             }
         }
@@ -34,41 +34,31 @@ class Person(var firstName: String, var lastName: String, var age: Int) {
 }
 
 // write a class "Money"
-class Money(var amount: Int, var currency: String) {
+class Money(val amount: Int, val currency: String) {
     init {
         if (amount < 0) 
             throw IllegalArgumentException("Amount cannot be less than zero")
         
         if (currency !in listOf("USD", "GBP", "EUR", "CAN"))
-            throw IllegalArgumentException("Unreqcognized currency")
+            throw IllegalArgumentException("Unrecognized currency")
     }
     
     fun convert(otherCurrency: String): Money {
         if (otherCurrency !in listOf("USD", "EUR", "CAN", "GBP"))
-            throw IllegalArgumentException("Unreqcognized currency")
+            throw IllegalArgumentException("Unrecognized currency")
         
-        return when {
-            this.currency == otherCurrency -> Money(this.amount, otherCurrency)
-            this.currency == "USD" -> when (otherCurrency) {
-                "GBP" -> Money((amount * 0.5).toInt(), "GBP")
-                "EUR" -> Money((amount * 1.5).toInt(), "EUR")
-                "CAN" -> Money((amount * 1.25).toInt(), "CAN")
-                else -> convert("USD").convert(otherCurrency)
-            }
-            this.currency == "GBP" -> when (otherCurrency) {
-                "USD" -> Money((amount * 2).toInt(), "USD")
-                else -> convert("USD").convert(otherCurrency)
-            }
-            this.currency == "EUR" -> when (otherCurrency) {
-                "USD" -> Money((amount * 0.67).toInt(), "USD")
-                else -> convert("USD").convert(otherCurrency)
-            }
-            this.currency == "CAN" -> when (otherCurrency) {
-                "USD" -> Money((amount * 0.8).toInt(), "USD")
-                else -> convert("USD").convert(otherCurrency)
-            }
+        return if (this.currency == otherCurrency) {
+            Money(this.amount, otherCurrency)
         }
-        else -> convert("USD").convert(otherCurrency)
+        else when (Pair(currency, otherCurrency)) {
+            Pair("USD", "GBP") -> Money((this.amount * 0.5).toInt(), "GBP")
+            Pair("USD", "EUR") -> Money((this.amount * 1.5).toInt(), "EUR")
+            Pair("USD", "CAN") -> Money((this.amount * 1.25).toInt(), "CAN")
+            Pair("GBP", "USD") -> Money((this.amount * 2).toInt(), "USD")
+            Pair("EUR", "USD") -> Money((this.amount * 0.75).toInt(), "USD")
+            Pair("CAN", "USD") -> Money((this.amount * 5 / 4).toInt(), "USD")
+            else -> convert("USD").convert(otherCurrency)
+        }
     }
 
     operator fun plus(other: Money): Money {
